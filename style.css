@@ -79,7 +79,6 @@ nav a:hover { color: var(--accent); }
 .btn-secondary:hover { background: var(--primary); color: white; }
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.form-grid.layout-3 { grid-template-columns: 1fr 1fr 1fr; } 
 
 .input-group { display: flex; flex-direction: column; text-align: left; }
 .input-group label { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
@@ -110,6 +109,6 @@ footer { text-align: center; padding: 20px; background: #1a252f; color: #fff; fo
 
 @media (max-width: 768px) {
     .hero-container, .nosotros-grid { flex-direction: column; }
-    .form-grid, .form-grid.layout-3 { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
     nav ul { gap: 15px; }
 }

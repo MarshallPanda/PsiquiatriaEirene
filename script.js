@@ -1,8 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp, getDoc, getDocs, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-import { firebaseConfig } from './config.js';
-// Luego inicializas normal...
+const firebaseConfig = {
+  apiKey: "AIzaSyCTquDBYf4unSX1HFdlreyIr6_23zbbV1c",
+  authDomain: "eirele-psicologica.firebaseapp.com",
+  projectId: "eirele-psicologica",
+  storageBucket: "eirele-psicologica.firebasestorage.app",
+  messagingSenderId: "742536880237",
+  appId: "1:742536880237:web:7f064ffbfd2d784e6e5f64"
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 

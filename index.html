@@ -25,7 +25,7 @@
         <div class="hero-container">
             <div class="hero-text">
                 <h1>Encuentra tu equilibrio emocional</h1>
-                <p>Un espacio seguro y confidencial diseñado para acompañarte en tu proceso de sanación y autodescubrimiento con profesionales altamente calificados.</p>
+                <p>Un espacio seguro y confidencial diseñado para acompañarte en tu proceso de sanación y autodescubrimiento.</p>
                 <a href="#contacto" class="btn-primary">Agendar mi cita</a>
             </div>
             <div class="hero-img">
@@ -61,19 +61,8 @@
             
             <div class="separador"></div>
 
-            <h2>Fundadores</h2>
-            <div class="fundadores-grid">
-                <div class="fundador-card">
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Dr. Marcos">
-                    <h4>Dr. Marcos Silva</h4>
-                    <p class="cargo">Director Médico</p>
-                </div>
-                <div class="fundador-card">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Dra. Elena">
-                    <h4>Dra. Elena Torres</h4>
-                    <p class="cargo">Directora de Psicología</p>
-                </div>
-            </div>
+            <h2>Nuestra Ubicación</h2>
+            <p>Atendemos de manera presencial y virtual para adaptarnos a tus necesidades.</p>
         </div>
     </section>
 
@@ -83,7 +72,7 @@
             <div class="servicios-grid">
                 <div class="servicio-card">
                     <h3>Psiquiatría Integral</h3>
-                    <p>Evaluación médica, diagnóstico y tratamiento farmacológico monitoreado para trastornos del estado de ánimo.</p>
+                    <p>Evaluación médica, diagnóstico y tratamiento farmacológico monitoreado.</p>
                 </div>
                 <div class="servicio-card">
                     <h3>Psicoterapia Individual</h3>
@@ -91,7 +80,7 @@
                 </div>
                 <div class="servicio-card">
                     <h3>Terapia de Pareja</h3>
-                    <p>Intervención para la resolución de conflictos y reestructuración de vínculos afectivos.</p>
+                    <p>Intervención para la resolución de conflictos y reestructuración de vínculos.</p>
                 </div>
             </div>
         </div>
@@ -115,32 +104,11 @@
                     
                     <div class="wizard-step active" id="step-1">
                         <h3 class="step-title">¿Con quién te gustaría atenderte?</h3>
-                        <div class="psicologos-selector">
-                            <label class="psicologo-card">
-                                <input type="radio" name="doctor" value="Dra. Ramirez" required>
-                                <div class="card-content glass-card">
-                                    <img src="https://images.unsplash.com/photo-1594824436951-7f12620cecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Dra. Ramirez">
-                                    <h4>Dra. Ramirez</h4>
-                                    <span class="especialidad">Psiquiatra</span>
-                                </div>
-                            </label>
-                            <label class="psicologo-card">
-                                <input type="radio" name="doctor" value="Dr. Silva">
-                                <div class="card-content glass-card">
-                                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Dr. Silva">
-                                    <h4>Dr. Silva</h4>
-                                    <span class="especialidad">Psicólogo Clínico</span>
-                                </div>
-                            </label>
-                            <label class="psicologo-card">
-                                <input type="radio" name="doctor" value="Lic. Pando">
-                                <div class="card-content glass-card">
-                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Lic. Pando">
-                                    <h4>Lic. Pando</h4>
-                                    <span class="especialidad">Psicóloga Infantil</span>
-                                </div>
-                            </label>
+                        
+                        <div class="psicologos-selector" id="contenedorPsicologos">
+                            <p style="text-align:center; width: 100%;">Cargando especialistas disponibles en línea...</p>
                         </div>
+                        
                         <div class="wizard-actions right">
                             <button type="button" class="btn-primary" id="btn-next-1">Continuar</button>
                         </div>
@@ -203,9 +171,8 @@
         <div class="container">
             <div class="text-center" style="margin-bottom: 40px;">
                 <h2>Módulo de Seguimiento de Citas</h2>
-                <p>Verifica si tu psicólogo ya aceptó, reagendó o procesó tu solicitud de reserva.</p>
+                <p>Verifica si tu psicólogo ya aceptó, reagendó o procesó tu solicitud.</p>
             </div>
-
             <div class="tracking-container glass-panel" style="max-width: 650px; margin: 0 auto;">
                 <form id="trackingForm">
                     <div class="input-group" style="margin-bottom: 20px;">
@@ -219,19 +186,18 @@
                     <h3 style="margin-bottom: 20px; color:var(--primary); font-size:1.4rem; border-bottom:1px solid #ddd; padding-bottom:10px;">Información de tu Cita</h3>
                     <div class="track-details">
                         <p><strong>Paciente:</strong> <span id="trackNombre"></span></p>
-                        <p><strong>Teléfono registrado:</strong> <span id="trackTelefono"></span></p>
                         <p><strong>Profesional Asignado:</strong> <span id="trackDoctor"></span></p>
                         <p><strong>Fecha Programada:</strong> <span id="trackFecha"></span></p>
                         <p><strong>Hora:</strong> <span id="trackHora"></span></p>
                         <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
-                            <strong>Estado de la Reserva:</strong>
+                            <strong>Estado:</strong>
                             <span id="trackEstado" class="status-badge"></span>
                         </div>
                     </div>
                 </div>
 
                 <div id="errorTracking" class="hidden alert-box" style="margin-top: 25px; color: #c0392b; font-weight: 600; text-align: center;">
-                    El código ingresado no corresponde a ninguna cita activa. Por favor, revísalo bien.
+                    El código ingresado no corresponde a ninguna cita activa.
                 </div>
             </div>
         </div>

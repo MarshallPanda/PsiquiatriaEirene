@@ -13,6 +13,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// NUEVO: Diccionario global para guardar los horarios de cada doctor en memoria
+let psicologosData = {};
+
 // --- CARGA DINÁMICA DE DOCTORES DESDE FIRESTORE ---
 async function cargarPsicologosDisponibles() {
     const contenedor = document.getElementById('contenedorPsicologos');
@@ -30,20 +33,23 @@ async function cargarPsicologosDisponibles() {
             const data = doc.data();
             
             if (data.nombre && data.especialidad) {
+                
+                // 1. Guardar en memoria los datos para validar luego
+                psicologosData[data.nombre] = {
+                    dias: data.dias_atencion && data.dias_atencion.length > 0 ? data.dias_atencion : ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    inicio: data.hora_inicio || "08:00",
+                    fin: data.hora_fin || "20:00"
+                };
+
                 const label = document.createElement('label');
                 label.className = 'psicologo-card';
                 
-                const diasLabel = data.dias_atencion && data.dias_atencion.length > 0 ? data.dias_atencion.join(', ') : 'Días por confirmar';
-                const horasLabel = data.hora_inicio && data.hora_fin ? `${data.hora_inicio} - ${data.hora_fin}` : 'Horario a coordinar';
+                const diasLabel = psicologosData[data.nombre].dias.join(', ');
+                const horasLabel = `${psicologosData[data.nombre].inicio} - ${psicologosData[data.nombre].fin}`;
 
-                // --- LÓGICA DE FOTO DE PERFIL ---
-                // 1. Imagen genérica de respaldo
                 const urlPorDefecto = "https://images.unsplash.com/photo-1594824436951-7f12620cecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80";
-                
-                // 2. Extraemos la URL de Firestore. Si está vacía, usamos el respaldo.
                 const imgUrl = (data.foto_url && data.foto_url.trim() !== "") ? data.foto_url : urlPorDefecto;
 
-                // 3. El atributo onerror="this.src='...'" actúa como salvavidas si el link falla.
                 label.innerHTML = `
                     <input type="radio" name="doctor" value="${data.nombre}" required>
                     <div class="card-content glass-card">
@@ -80,16 +86,60 @@ function goToStep(step) {
     document.getElementById(`ind-${step}`).classList.add('active');
 }
 
+// Al pasar del Paso 1 al Paso 2: Configuramos el calendario
 document.getElementById('btn-next-1').addEventListener('click', () => {
     const docSeleccionado = document.querySelector('input[name="doctor"]:checked');
     if (!docSeleccionado) return alert("Por favor, selecciona un especialista.");
+    
+    // Configurar Hint Visual y Límites del Input
+    const infoDoctor = psicologosData[docSeleccionado.value];
+    document.getElementById('horarioHint').innerHTML = `💡 Horario de ${docSeleccionado.value}:<br><strong>${infoDoctor.dias.join(', ')}</strong> de <strong>${infoDoctor.inicio}</strong> a <strong>${infoDoctor.fin}</strong>`;
+    
+    // Bloquear fechas pasadas en el calendario
+    const inputFecha = document.getElementById('fecha');
+    const hoy = new Date();
+    // Ajustar a la zona horaria local (-5 Perú)
+    hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
+    inputFecha.min = hoy.toISOString().split('T')[0];
+
+    // Establecer límites visuales en el selector de hora
+    const inputHora = document.getElementById('hora');
+    inputHora.min = infoDoctor.inicio;
+    inputHora.max = infoDoctor.fin;
+
     goToStep(2);
 });
 
+// Al pasar del Paso 2 al Paso 3: EJECUTAMOS LA VALIDACIÓN ESTRICTA
 document.getElementById('btn-next-2').addEventListener('click', () => {
-    if (!document.getElementById('fecha').value || !document.getElementById('hora').value) {
+    const fechaVal = document.getElementById('fecha').value;
+    const horaVal = document.getElementById('hora').value;
+
+    if (!fechaVal || !horaVal) {
         return alert("Por favor, selecciona fecha y hora.");
     }
+
+    const doctorNombre = document.querySelector('input[name="doctor"]:checked').value;
+    const infoDoctor = psicologosData[doctorNombre];
+
+    // 1. Validar el Día de la Semana
+    // Separamos el string para evitar problemas de desfase de zona horaria de JavaScript
+    const [year, month, day] = fechaVal.split('-');
+    const dateObj = new Date(year, month - 1, day); 
+    
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const nombreDiaElegido = diasSemana[dateObj.getDay()];
+
+    if (!infoDoctor.dias.includes(nombreDiaElegido)) {
+        return alert(`❌ El especialista no atiende los días ${nombreDiaElegido}.\n\nPor favor elige uno de estos días: ${infoDoctor.dias.join(', ')}.`);
+    }
+
+    // 2. Validar el Rango de Horas
+    if (horaVal < infoDoctor.inicio || horaVal > infoDoctor.fin) {
+        return alert(`❌ La hora seleccionada (${horaVal}) está fuera del turno del especialista.\n\nHorario permitido: de ${infoDoctor.inicio} a ${infoDoctor.fin}.`);
+    }
+
+    // Si todo está correcto, avanzamos al formulario final
     goToStep(3);
 });
 
@@ -97,7 +147,7 @@ document.getElementById('btn-prev-2').addEventListener('click', () => goToStep(1
 document.getElementById('btn-prev-3').addEventListener('click', () => goToStep(2));
 
 
-// --- CREAR CITA ---
+// --- CREAR CITA EN FIRESTORE ---
 document.getElementById('citaForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btnSubmit = document.getElementById('btnSubmit');

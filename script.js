@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp, getDoc, getDocs, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Configuramos las credenciales de Firebase directamente en el archivo
 const firebaseConfig = {
     apiKey: "AIzaSyCTquDBYf4unSX1HFdlreyIr6_23zbbV1c",
     authDomain: "eirele-psicologica.firebaseapp.com",
@@ -14,9 +13,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let psicologosData = {};
+// --- LÓGICA DEL MENÚ RESPONSIVO (HAMBURGUESA) ---
+const mobileMenu = document.getElementById('mobile-menu');
+const navMenu = document.getElementById('nav-menu');
+
+mobileMenu.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+});
+
+// Cerrar menú al hacer clic en un enlace (en móviles)
+document.querySelectorAll('.nav-menu ul li a').forEach(enlace => {
+    enlace.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+    });
+});
+
 
 // --- CARGA DINÁMICA DE DOCTORES DESDE FIRESTORE ---
+let psicologosData = {};
+
 async function cargarPsicologosDisponibles() {
     const contenedor = document.getElementById('contenedorPsicologos');
     try {
@@ -31,7 +46,6 @@ async function cargarPsicologosDisponibles() {
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             if (data.nombre && data.especialidad) {
-                // Guardamos los horarios para la validación del paso 2
                 psicologosData[data.nombre] = {
                     dias: data.dias_atencion && data.dias_atencion.length > 0 ? data.dias_atencion : ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
                     inicio: data.hora_inicio || "08:00",
@@ -43,7 +57,6 @@ async function cargarPsicologosDisponibles() {
                 const diasLabel = psicologosData[data.nombre].dias.join(', ');
                 const horasLabel = `${psicologosData[data.nombre].inicio} - ${psicologosData[data.nombre].fin}`;
                 
-                // Lógica de Foto de Perfil con fallback
                 const urlPorDefecto = "https://images.unsplash.com/photo-1594824436951-7f12620cecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80";
                 const imgUrl = (data.foto_url && data.foto_url.trim() !== "") ? data.foto_url : urlPorDefecto;
 
@@ -72,8 +85,6 @@ async function cargarPsicologosDisponibles() {
         contenedor.innerHTML = '<p style="color:red; text-align:center; width:100%;">Error al conectar con los servidores.</p>';
     }
 }
-
-// Iniciar carga automáticamente
 document.addEventListener('DOMContentLoaded', cargarPsicologosDisponibles);
 
 
@@ -85,23 +96,18 @@ function goToStep(step) {
     document.getElementById(`ind-${step}`).classList.add('active');
 }
 
-// Del Paso 1 al Paso 2: Preparar Calendario
 document.getElementById('btn-next-1').addEventListener('click', () => {
     const docSeleccionado = document.querySelector('input[name="doctor"]:checked');
     if (!docSeleccionado) return alert("Por favor, selecciona un especialista para continuar.");
     
     const infoDoctor = psicologosData[docSeleccionado.value];
-    
-    // Muestra alerta visual para el paciente
     document.getElementById('horarioHint').innerHTML = `💡 Horario de ${docSeleccionado.value}:<br><strong>${infoDoctor.dias.join(', ')}</strong> de <strong>${infoDoctor.inicio}</strong> a <strong>${infoDoctor.fin}</strong>`;
     
-    // Bloquear fechas pasadas en el selector nativo
     const inputFecha = document.getElementById('fecha');
     const hoy = new Date();
     hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
     inputFecha.min = hoy.toISOString().split('T')[0];
 
-    // Limites de tiempo en el selector nativo
     const inputHora = document.getElementById('hora');
     inputHora.min = infoDoctor.inicio;
     inputHora.max = infoDoctor.fin;
@@ -109,7 +115,6 @@ document.getElementById('btn-next-1').addEventListener('click', () => {
     goToStep(2);
 });
 
-// Del Paso 2 al Paso 3: Validación Matemática
 document.getElementById('btn-next-2').addEventListener('click', () => {
     const fechaVal = document.getElementById('fecha').value;
     const horaVal = document.getElementById('hora').value;
@@ -118,7 +123,6 @@ document.getElementById('btn-next-2').addEventListener('click', () => {
     const doctorNombre = document.querySelector('input[name="doctor"]:checked').value;
     const infoDoctor = psicologosData[doctorNombre];
 
-    // Verificar Día de la Semana
     const [year, month, day] = fechaVal.split('-');
     const dateObj = new Date(year, month - 1, day); 
     const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -128,7 +132,6 @@ document.getElementById('btn-next-2').addEventListener('click', () => {
         return alert(`❌ El especialista no atiende los días ${nombreDiaElegido}.\n\nPor favor elige uno de estos días: ${infoDoctor.dias.join(', ')}.`);
     }
 
-    // Verificar Rango Horario
     if (horaVal < infoDoctor.inicio || horaVal > infoDoctor.fin) {
         return alert(`❌ La hora seleccionada (${horaVal}) está fuera del turno del especialista.\n\nHorario permitido: de ${infoDoctor.inicio} a ${infoDoctor.fin}.`);
     }

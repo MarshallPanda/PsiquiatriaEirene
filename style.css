@@ -1,37 +1,41 @@
 /* Variables y Configuración General */
 :root {
-    --primary: #2C3E50;
-    --secondary: #E8F0ED;
-    --accent: #C5A880;
-    --text-dark: #333;
-    --text-light: #fff;
+    --primary: #2C3E4C; 
+    --secondary: #F4F7F6; 
+    --accent: #8FA596; 
+    --accent-hover: #7A8F81;
+    --text-dark: #3A4750;
+    --text-light: #ffffff;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.4);
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Montserrat', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-body); color: var(--text-dark); background: #fafafa; }
+body { font-family: var(--font-body); color: var(--text-dark); background: #fafafa; scroll-behavior: smooth; }
 .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
 .bg-light { background-color: var(--secondary); }
-.bg-dark { background-color: var(--primary); color: var(--text-light); }
 .text-center { text-align: center; }
+.text-left { text-align: left; }
 .mt-20 { margin-top: 20px; }
-h1, h2, h3, .logo { font-family: var(--font-heading); }
+h1, h2, h3, h4, .logo { font-family: var(--font-heading); }
 
 /* Header */
 header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: #fff; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 .logo { font-size: 1.8rem; font-weight: 600; color: var(--primary); }
-nav ul { list-style: none; display: flex; gap: 30px; }
-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; }
+nav ul { list-style: none; display: flex; gap: 30px; align-items: center; }
+nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s; }
+nav a:hover { color: var(--accent); }
+.nav-highlight { background: var(--primary); color: white !important; padding: 8px 15px; border-radius: 5px; }
+.nav-highlight:hover { background: var(--accent); }
 
 /* Botones */
-.btn-primary, .btn-submit { display: inline-block; padding: 15px 30px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 5px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; }
-.btn-primary:hover, .btn-submit:hover { background: #b09570; }
-.center-btn { display: block; margin: 0 auto; }
+.btn-primary, .btn-submit { display: inline-block; padding: 15px 30px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 5px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; text-align: center; }
+.btn-primary:hover, .btn-submit:hover { background: var(--accent-hover); }
 
 /* Separador */
 .separador { width: 100%; height: 1px; background: rgba(0,0,0,0.1); margin: 60px 0; }
-.bg-dark .separador { background: rgba(255,255,255,0.1); }
 
 /* Inicio */
 .hero-container { display: flex; align-items: center; justify-content: space-between; padding: 60px 5%; gap: 40px; }
@@ -41,65 +45,88 @@ nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-s
 .hero-img { flex: 1; }
 .hero-img img { width: 100%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
-/* Carruseles (Animación infinita) */
+/* Carruseles Animados */
 .carousel-container { padding: 0 0 60px 0; overflow: hidden; width: 100%; }
 .slider { width: 100%; overflow: hidden; white-space: nowrap; }
 .slide-track { display: inline-flex; gap: 20px; animation: scroll 25s linear infinite; }
 .slide-track img { width: 300px; height: 200px; object-fit: cover; border-radius: 10px; }
-.slide-track.right { animation-direction: reverse; }
-@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-320px * 4)); } } /* Ajustado según número de imágenes */
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-320px * 4)); } }
 
 /* Nosotros */
 .nosotros-grid { display: flex; gap: 50px; align-items: center; }
 .nosotros-text { flex: 1; }
 .nosotros-text h2 { font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); }
 .rounded-img { flex: 1; width: 100%; max-width: 500px; border-radius: 20px; }
-
-.mision-vision { display: flex; gap: 40px; }
-.mv-card { flex: 1; background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-.mv-card h3 { color: var(--accent); font-size: 1.8rem; margin-bottom: 15px; }
-
 .fundadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-top: 30px; text-align: center; }
 .fundador-card img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .fundador-card h4 { font-size: 1.3rem; color: var(--primary); }
 .cargo { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
-
-.mapa-container { margin-top: 30px; border-radius: 10px; overflow: hidden; }
 
 /* Servicios */
 .servicios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; text-align: left; }
 .servicio-card { background: #fff; padding: 40px; border-radius: 10px; border-top: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 .servicio-card h3 { font-size: 1.5rem; color: var(--primary); margin-bottom: 15px; }
 
-/* Contacto y Formulario */
-.title-1 { font-size: 3rem; margin-bottom: 10px; }
-.text-2 { font-size: 1.2rem; color: var(--accent); margin-bottom: 20px; }
-.text-3 { margin-bottom: 40px; opacity: 0.9; }
+/* --- WIZARD Y GLASSMORPHISM --- */
+.bg-gradient { background: linear-gradient(135deg, #E6EFE9 0%, #F4F7F6 100%); color: var(--text-dark); }
+.contacto-header { margin-bottom: 40px; }
+.title-1 { font-size: 3rem; color: var(--primary); margin-bottom: 10px; }
 
-.psicologos-selector { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 30px; }
-.psicologo-card { cursor: pointer; flex: 1; min-width: 250px; max-width: 300px; }
-.psicologo-card input[type="radio"] { display: none; }
-.psicologo-card .card-content { background: rgba(255,255,255,0.05); padding: 30px 20px; border-radius: 10px; border: 2px solid transparent; text-align: center; transition: 0.3s; }
-.psicologo-card input[type="radio"]:checked + .card-content { border-color: var(--accent); background: rgba(255,255,255,0.1); transform: translateY(-5px); }
-.psicologo-card img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; }
-.psicologo-card h4 { font-size: 1.2rem; margin-bottom: 5px; }
-.especialidad { display: block; color: var(--accent); font-size: 0.85rem; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
-.psicologo-card p { font-size: 0.9rem; opacity: 0.8; }
+.glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05); }
+.glass-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.8); border-radius: 15px; transition: all 0.3s ease; }
 
+.wizard-container { max-width: 800px; margin: 0 auto; }
+.wizard-progress { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 15px; }
+.step-indicator { color: #aaa; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+.step-indicator.active { color: var(--accent); border-bottom: 3px solid var(--accent); padding-bottom: 13px; margin-bottom: -17px; }
+
+.wizard-step { display: none; animation: fadeIn 0.5s ease; }
+.wizard-step.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.step-title { font-size: 1.5rem; margin-bottom: 25px; color: var(--primary); text-align: center; }
+
+.wizard-actions { display: flex; margin-top: 30px; }
+.wizard-actions.right { justify-content: flex-end; }
+.wizard-actions.space-between { justify-content: space-between; }
+.btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+.btn-secondary:hover { background: var(--primary); color: white; }
+
+/* Estructuras de Formularios */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.form-grid input { width: 100%; padding: 15px; border-radius: 5px; border: none; font-family: var(--font-body); }
-.time-input-group input { width: 100%; }
+.form-grid.layout-3 { grid-template-columns: 1fr 1fr 1fr; } /* Layout especial para 3 elementos */
 
-.btn-submit { width: 100%; font-size: 1.1rem; }
-.hidden { display: none; }
+.input-group { display: flex; flex-direction: column; text-align: left; }
+.input-group label { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+.input-group input { padding: 12px 15px; border: 1px solid #ccd5d0; border-radius: 8px; font-family: var(--font-body); outline: none; transition: border 0.3s; background: #fff; width: 100%; }
+.input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(143, 165, 150, 0.2); }
 
-.success-box { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 10px; text-align: center; border: 1px solid var(--accent); margin-top: 30px; }
-.success-box strong { font-size: 1.5rem; color: var(--accent); display: block; margin: 10px 0; }
+/* Selector de Especialistas */
+.psicologos-selector { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 30px; }
+.psicologo-card { cursor: pointer; flex: 1; min-width: 200px; max-width: 250px; }
+.psicologo-card input[type="radio"] { display: none; }
+.psicologo-card .card-content { padding: 30px 20px; text-align: center; }
+.psicologo-card input[type="radio"]:checked + .card-content { border-color: var(--accent); background: #fff; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(143, 165, 150, 0.15); }
+.psicologo-card img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; }
+.psicologo-card h4 { font-size: 1.2rem; margin-bottom: 5px; color: var(--primary); }
+.especialidad { display: block; color: var(--accent); font-size: 0.85rem; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
+
+/* Control del DOM */
+.hidden { display: none !important; }
+.success-box { text-align: center; padding: 40px; margin-top: 30px; border: 1px solid var(--accent); }
+.success-icon { font-size: 3rem; color: var(--accent); margin-bottom: 15px; }
+.success-box strong { font-size: 1.6rem; color: var(--primary); display: block; margin: 15px 0; background: #fff; padding: 10px; border-radius: 5px; border: 1px dashed var(--accent); letter-spacing: 1px; }
+
+/* --- ESTILOS DE ESTADOS (BADGES) --- */
+.track-details p { margin-bottom: 12px; font-size: 1.05rem; }
+.status-badge { padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; display: inline-block; color: #fff; }
+.badge-pendiente { background-color: #f39c12; }
+.badge-confirmada { background-color: #2ecc71; }
+.badge-cancelada { background-color: #e74c3c; }
 
 footer { text-align: center; padding: 20px; background: #1a252f; color: #fff; font-size: 0.9rem; }
 
 @media (max-width: 768px) {
-    .hero-container, .nosotros-grid, .mision-vision { flex-direction: column; }
-    .form-grid { grid-template-columns: 1fr; }
-    nav ul { display: none; /* Idealmente aquí va un menú hamburguesa */ }
+    .hero-container, .nosotros-grid { flex-direction: column; }
+    .form-grid, .form-grid.layout-3 { grid-template-columns: 1fr; }
+    nav ul { gap: 15px; }
 }

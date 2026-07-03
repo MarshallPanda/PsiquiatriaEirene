@@ -1,0 +1,504 @@
+/* =========================================
+   EIRENE — CHATBOTS FLOTANTES
+   Archivo: chatbots.css
+========================================= */
+
+/* --- Botones flotantes (FABs) --- */
+.chatbot-fabs {
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.chatbot-fab {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 20px 13px 15px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: 0 5px 22px rgba(0, 0, 0, 0.20);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+    -webkit-tap-highlight-color: transparent; /* quita flash azul en Android */
+}
+
+.chatbot-fab .fab-emoji {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.chatbot-fab:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+}
+
+/* Finder: azul oscuro institucional */
+.fab-finder       { background: #2C3E4C; }
+.fab-finder:hover { background: #3a5268; }
+
+/* Support: sage verde cálido */
+.fab-support       { background: #8FA596; }
+.fab-support:hover { background: #7A8F81; }
+
+/* Estado minimizado (cuando la ventana está abierta) */
+.chatbot-fab .fab-label {
+    max-width: 160px;
+    overflow: hidden;
+    transition: max-width 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+
+.chatbot-fab.fab-minimized {
+    padding: 13px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    justify-content: center;
+}
+
+.chatbot-fab.fab-minimized .fab-label {
+    max-width: 0;
+    opacity: 0;
+    margin: 0;
+}
+
+/* Pulso sutil de bienvenida */
+@keyframes fabEntrance {
+    0%, 100% { box-shadow: 0 5px 22px rgba(0,0,0,0.20), 0 0 0 0 rgba(143,165,150,0.5); }
+    50%       { box-shadow: 0 5px 22px rgba(0,0,0,0.20), 0 0 0 10px rgba(143,165,150,0); }
+}
+
+.chatbot-fab:not(.fab-minimized) {
+    animation: fabEntrance 2.8s ease-in-out 1.5s 2;
+}
+
+/* --- Ventana de chat --- */
+.chatbot-window {
+    position: fixed;
+    bottom: 155px;
+    right: 24px;
+    width: 355px;
+    height: 490px;
+    border-radius: 20px;
+    box-shadow: 0 15px 55px rgba(0, 0, 0, 0.14);
+    display: none;
+    flex-direction: column;
+    z-index: 9998;
+    overflow: hidden;
+    background: #fff;
+}
+
+.chatbot-window.chat-active {
+    display: flex;
+    animation: slideUp 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --- Cabecera del chat --- */
+.chat-header {
+    padding: 15px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.chat-header-finder  { background: linear-gradient(130deg, #2C3E4C 0%, #3d5166 100%); }
+.chat-header-support { background: linear-gradient(130deg, #8FA596 0%, #6d8a77 100%); }
+
+.chat-header-info {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.chat-header-emoji {
+    font-size: 1.6rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.chat-header-text strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.97rem;
+    font-weight: 600;
+}
+
+.chat-header-text small {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.71rem;
+    opacity: 0.82;
+    font-weight: 400;
+}
+
+.chat-close-btn {
+    background: rgba(255,255,255,0.22);
+    border: none;
+    color: #fff;
+    font-size: 0.88rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.chat-close-btn:hover { background: rgba(255,255,255,0.38); }
+
+/* --- Zona de mensajes --- */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* scroll suave en iOS */
+    padding: 18px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    background: #F4F7F6;
+    scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar       { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: #C9D8CE; border-radius: 10px; }
+
+/* --- Burbujas de mensajes --- */
+.chat-msg-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    max-width: 90%;
+}
+
+.msg-bot-wrapper  { align-self: flex-start; }
+.msg-user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
+
+.chat-bubble {
+    padding: 10px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.86rem;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+/* Bot: blanco con borde izquierdo verde */
+.bubble-bot {
+    background: #fff;
+    color: #3A4750;
+    border-radius: 4px 16px 16px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 3px solid #8FA596;
+}
+
+/* Usuario: azul oscuro */
+.bubble-user {
+    background: #2C3E4C;
+    color: #fff;
+    border-radius: 16px 4px 16px 16px;
+}
+
+/* --- Indicador de escritura --- */
+.typing-bubble {
+    padding: 13px 16px !important;
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+    min-width: 55px;
+}
+
+.typing-bubble span {
+    width: 7px;
+    height: 7px;
+    background: #8FA596;
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 1.3s infinite;
+}
+
+.typing-bubble span:nth-child(2) { animation-delay: 0.18s; }
+.typing-bubble span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0);   opacity: 0.45; }
+    30%            { transform: translateY(-7px); opacity: 1; }
+}
+
+/* --- Pie del chat (Input) --- */
+.chat-footer {
+    padding: 12px 14px;
+    background: #fff;
+    border-top: 1px solid #E3EDEA;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid #C5D4CC;
+    border-radius: 50px;
+    padding: 9px 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.84rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #F4F7F6;
+    color: #3A4750;
+}
+
+.chat-input:focus {
+    border-color: #8FA596;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(143, 165, 150, 0.18);
+}
+
+.chat-input:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.chat-send-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, opacity 0.2s;
+    flex-shrink: 0;
+    color: #fff;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.send-finder  { background: #2C3E4C; }
+.send-support { background: #8FA596; }
+
+.chat-send-btn:hover:not(:disabled) { transform: scale(1.12); }
+.chat-send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+
+/* =====================================================
+   SAFE AREA — iPhone X+ / dispositivos con home bar
+   Evita que los FABs queden tapados por el indicador
+====================================================== */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .chatbot-fabs {
+        bottom: max(28px, calc(env(safe-area-inset-bottom) + 14px));
+    }
+    .chatbot-window {
+        bottom: max(155px, calc(env(safe-area-inset-bottom) + 130px));
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVO — TABLETAS (769px – 1024px)
+====================================================== */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .chatbot-window {
+        width: 330px;
+        height: 470px;
+        right: 20px;
+    }
+    .chatbot-fabs {
+        right: 20px;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVO — TABLETA PEQUEÑA / MÓVIL GRANDE (≤768px)
+====================================================== */
+@media (max-width: 768px) {
+    .chatbot-fabs {
+        right: 16px;
+        bottom: 20px;
+        gap: 10px;
+    }
+
+    .chatbot-window {
+        /* Ancho casi full sin tocar los bordes */
+        width: calc(100vw - 28px);
+        left: 14px;
+        right: 14px;
+        bottom: 145px;
+        /* min() adapta la altura si la pantalla es baja */
+        height: min(460px, calc(100vh - 175px));
+        border-radius: 18px;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVO — MÓVILES (≤480px)
+====================================================== */
+@media (max-width: 480px) {
+
+    /* FABs */
+    .chatbot-fabs {
+        right: 12px;
+        bottom: 16px;
+        gap: 9px;
+    }
+
+    .chatbot-fab {
+        padding: 11px 14px 11px 11px;
+        font-size: 0.79rem;
+        /* Área táctil mínima recomendada: 44px alto */
+        min-height: 44px;
+    }
+
+    .chatbot-fab .fab-emoji {
+        font-size: 1.05rem;
+    }
+
+    /* Quitar pulso en móvil: ahorra batería y CPU */
+    .chatbot-fab:not(.fab-minimized) {
+        animation: none;
+    }
+
+    /* Ventana full-width */
+    .chatbot-window {
+        width: calc(100vw - 16px);
+        left: 8px;
+        right: 8px;
+        bottom: 130px;
+        height: min(430px, calc(100vh - 155px));
+        border-radius: 16px;
+    }
+
+    /* Cabecera compacta */
+    .chat-header {
+        padding: 12px 14px;
+    }
+
+    .chat-header-emoji {
+        font-size: 1.35rem;
+    }
+
+    .chat-header-text strong {
+        font-size: 0.9rem;
+    }
+
+    .chat-header-text small {
+        font-size: 0.65rem;
+    }
+
+    .chat-close-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    /* Mensajes */
+    .chat-messages {
+        padding: 13px 11px;
+        gap: 9px;
+    }
+
+    .chat-bubble {
+        font-size: 0.84rem;
+        padding: 9px 12px;
+        line-height: 1.55;
+    }
+
+    .chat-msg-wrapper {
+        max-width: 93%;
+    }
+
+    /* Pie / Input */
+    .chat-footer {
+        padding: 10px 11px;
+        gap: 8px;
+    }
+
+    .chat-input {
+        /*
+         * ⚠️ MUY IMPORTANTE: font-size mínimo 16px en móvil.
+         * Valores menores provocan que iOS haga zoom automático
+         * al enfocar el input, rompiendo el diseño.
+         */
+        font-size: 16px;
+        padding: 9px 13px;
+    }
+
+    .chat-send-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    .typing-bubble span {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVO — MÓVILES PEQUEÑOS (≤375px — iPhone SE, etc.)
+====================================================== */
+@media (max-width: 375px) {
+
+    .chatbot-fabs {
+        right: 10px;
+        bottom: 14px;
+        gap: 8px;
+    }
+
+    .chatbot-fab {
+        padding: 10px 12px 10px 10px;
+        font-size: 0.74rem;
+    }
+
+    /* Acortar etiqueta para que no desborde */
+    .chatbot-fab .fab-label {
+        max-width: 115px;
+    }
+
+    .chatbot-window {
+        width: calc(100vw - 12px);
+        left: 6px;
+        right: 6px;
+        bottom: 122px;
+        height: min(390px, calc(100vh - 148px));
+        border-radius: 14px;
+    }
+
+    .chat-header-text strong {
+        font-size: 0.86rem;
+    }
+
+    .chat-bubble {
+        font-size: 0.82rem;
+    }
+
+    .chat-header {
+        padding: 11px 12px;
+    }
+}

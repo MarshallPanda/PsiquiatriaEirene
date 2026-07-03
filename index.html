@@ -6,6 +6,8 @@
     <title>EIRENE | Clínica Psicológica</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- ✅ NUEVO: Estilos de los chatbots flotantes -->
+    <link rel="stylesheet" href="chatbots.css">
 </head>
 <body>
     <header>
@@ -39,7 +41,7 @@
                 <div class="slide-track left">
                     <img src="https://images.unsplash.com/photo-1493804714600-d0e1542f4cd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c1">
                     <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c2">
-                    <img src="https://images.unsplash.com/photo-157349620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c3">
+                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c3">
                     <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c4">
                     <img src="https://images.unsplash.com/photo-1493804714600-d0e1542f4cd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c1">
                     <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="c2">
@@ -214,6 +216,65 @@
         <p>© 2026 Clínica EIRENE. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- ============================================================
+         ✅ NUEVO: HTML de los dos chatbots flotantes
+         Coloca esto justo antes del cierre </body>
+    ============================================================ -->
+
+    <!-- BOT 1: Encontrar Psicólogo -->
+    <div id="chat-window-finder" class="chatbot-window">
+        <div class="chat-header chat-header-finder">
+            <div class="chat-header-info">
+                <span class="chat-header-emoji">🔍</span>
+                <div class="chat-header-text">
+                    <strong>Encuentra tu Psicólogo</strong>
+                    <small>Asistente EIRENE</small>
+                </div>
+            </div>
+            <button class="chat-close-btn" id="chat-close-finder" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="chat-messages" id="chat-msgs-finder"></div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input-finder" class="chat-input" placeholder="¿Qué tipo de ayuda buscas?" autocomplete="off">
+            <button id="chat-send-finder" class="chat-send-btn send-finder" aria-label="Enviar">➤</button>
+        </div>
+    </div>
+
+    <!-- BOT 2: Apoyo Emocional -->
+    <div id="chat-window-support" class="chatbot-window">
+        <div class="chat-header chat-header-support">
+            <div class="chat-header-info">
+                <span class="chat-header-emoji">💙</span>
+                <div class="chat-header-text">
+                    <strong>Apoyo Emocional</strong>
+                    <small>Bot de acompañamiento</small>
+                </div>
+            </div>
+            <button class="chat-close-btn" id="chat-close-support" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="chat-messages" id="chat-msgs-support"></div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input-support" class="chat-input" placeholder="Cuéntame cómo te sientes..." autocomplete="off">
+            <button id="chat-send-support" class="chat-send-btn send-support" aria-label="Enviar">➤</button>
+        </div>
+    </div>
+
+    <!-- Botones flotantes -->
+    <div class="chatbot-fabs">
+        <button class="chatbot-fab fab-finder" id="fab-finder" aria-label="Abrir asistente para encontrar psicólogo">
+            <span class="fab-emoji">🔍</span>
+            <span class="fab-label">Buscar Psicólogo</span>
+        </button>
+        <button class="chatbot-fab fab-support" id="fab-support" aria-label="Abrir chat de apoyo emocional">
+            <span class="fab-emoji">💙</span>
+            <span class="fab-label">Apoyo Emocional</span>
+        </button>
+    </div>
+
+    <!-- Scripts -->
     <script type="module" src="script.js"></script>
+    <!-- ✅ NUEVO: Script de los chatbots (carga normal, no module) -->
+    <script src="chatbot.js"></script>
+
 </body>
 </html>

@@ -32,6 +32,10 @@ document.querySelectorAll('.nav-menu ul li a').forEach(enlace => {
 // --- CARGA DINÁMICA DE DOCTORES DESDE FIRESTORE ---
 let psicologosData = {};
 
+// ✅ CAMBIO: Exponer globalmente para que chatbots.js pueda acceder a los datos.
+//    Como es el mismo objeto, cualquier mutación posterior queda reflejada automáticamente.
+window.psicologosData = psicologosData;
+
 async function cargarPsicologosDisponibles() {
     const contenedor = document.getElementById('contenedorPsicologos');
     try {

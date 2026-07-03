@@ -1,17 +1,8 @@
-// =========================================
-// EIRENE — CHATBOTS FLOTANTES
-// Archivo: chatbot.js
-// =========================================
-// ⚠️  Reemplaza OPENAI_API_KEY con tu clave real.
-// ⚠️  Abre el sitio desde un servidor web, NO como
-//     archivo local (file://). Usa Live Server en VS Code
-//     o ejecuta: npx serve .
-// =========================================
 
-const OPENAI_API_KEY = 'process.env.OPENAI_API_KEY';
-const OPENAI_URL     = 'https://api.openai.com/v1/chat/completions';
-const GPT_MODEL      = 'gpt-4o-mini';
-const MAX_TOKENS     = 450;
+
+// 👉 Reemplaza esto por la URL real que te da `firebase deploy` al final.
+//    Formato esperado: https://us-central1-eirele-psicologica.cloudfunctions.net/chatCompletion
+const CLOUD_FUNCTION_URL = 'https://us-central1-eirele-psicologica.cloudfunctions.net/chatCompletion';
 
 // =========================================
 // PROMPTS DE SISTEMA
@@ -220,15 +211,6 @@ class ChatbotEIRENE {
         if (!isRetry) {
             if (!text || this.inputEl.disabled) return;
 
-            // Verificar que la API key esté configurada
-            if (!OPENAI_API_KEY || OPENAI_API_KEY.includes('AQUÍ') || !OPENAI_API_KEY.startsWith('sk-')) {
-                this._addMsg('bot',
-                    '⚠️ La API key no está configurada.\n' +
-                    'Abre chatbot.js, línea 12, y reemplaza el texto con tu clave de OpenAI.'
-                );
-                return;
-            }
-
             this.inputEl.value = '';
             this._addMsg('user', text);
             this.history.push({ role: 'user', content: text });
@@ -238,30 +220,24 @@ class ChatbotEIRENE {
         this._showTyping();
 
         try {
-            const response = await fetch(OPENAI_URL, {
+            const response = await fetch(CLOUD_FUNCTION_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model:       GPT_MODEL,
-                    max_tokens:  MAX_TOKENS,
-                    temperature: 0.75,
-                    messages: [
-                        { role: 'system', content: this._buildSystemPrompt() },
-                        ...this.history
-                    ]
+                    systemPrompt: this._buildSystemPrompt(),
+                    messages: this.history
                 })
             });
 
+            const data = await response.json().catch(() => ({}));
+
             if (!response.ok) {
-                const errBody = await response.json().catch(() => ({}));
-                throw new Error(`HTTP_${response.status}::${errBody.error?.message || ''}`);
+                throw new Error(`HTTP_${response.status}::${data.error || ''}`);
             }
 
-            const data  = await response.json();
-            const reply = data.choices?.[0]?.message?.content?.trim();
+            const reply = data.reply?.trim();
             if (!reply) throw new Error('EMPTY_RESPONSE');
 
             // Éxito: limpiar reintento y mostrar respuesta
@@ -296,10 +272,10 @@ class ChatbotEIRENE {
                     'Los chatbots necesitan un servidor web:\n\n' +
                     '• VS Code → clic derecho en index.html → "Open with Live Server"\n' +
                     '• Terminal → npx serve .';
-            } else if (msg.includes('http_401') || msg.includes('incorrect api key') || msg.includes('invalid_api_key')) {
-                msgError = '⚠️ API key inválida o revocada.\nGenera una nueva en platform.openai.com/api-keys y actualiza chatbot.js.';
-            } else if (msg.includes('http_403')) {
-                msgError = '⚠️ Acceso denegado. Verifica que tu API key esté activa y tenga saldo en OpenAI.';
+            } else if (msg.includes('http_401') || msg.includes('http_403')) {
+                msgError = '⚠️ Error de configuración del servidor. Contacta al administrador del sitio.';
+            } else if (msg.includes('http_404')) {
+                msgError = '⚠️ No se encontró el servicio de chat. Verifica que CLOUD_FUNCTION_URL esté bien configurada.';
             } else if (is429) {
                 // Segundo 429 después del reintento automático
                 msgError = '⏳ El límite de solicitudes sigue activo. Espera 1-2 minutos e intenta de nuevo.';
@@ -327,13 +303,6 @@ class ChatbotEIRENE {
 document.addEventListener('DOMContentLoaded', () => {
 
     // Advertencias de configuración en consola del navegador
-    if (!OPENAI_API_KEY || OPENAI_API_KEY.includes('AQUÍ')) {
-        console.warn(
-            '%c[EIRENE Chatbots] ⚠️ API key no configurada',
-            'color: orange; font-weight: bold',
-            '\n→ Edita chatbot.js línea 12 con tu clave de OpenAI.'
-        );
-    }
     if (location.protocol === 'file:') {
         console.warn(
             '%c[EIRENE Chatbots] ⚠️ Abierto como archivo local (file://)',

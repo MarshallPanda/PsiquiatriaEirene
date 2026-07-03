@@ -8,7 +8,7 @@
 //     o ejecuta: npx serve .
 // =========================================
 
-const OPENAI_API_KEY = 'process.env.OPENAI_API_KEY';
+const OPENAI_API_KEY = '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';
 const OPENAI_URL     = 'https://api.openai.com/v1/chat/completions';
 const GPT_MODEL      = 'gpt-4o-mini';
 const MAX_TOKENS     = 450;
